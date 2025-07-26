@@ -1,0 +1,114 @@
+ Project Structure (frontend/)
+pgsql
+Copy
+Edit
+frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── App.js
+│   ├── api.js
+│   └── index.js
+├── .env
+├── package.json
+└── README.md
+🧩 package.json
+json
+Copy
+Edit
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^1.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start"
+  }
+}
+Install dependencies with:
+
+bash
+Copy
+Edit
+npm install
+🌐 .env
+env
+Copy
+Edit
+REACT_APP_API_URL=http://localhost:5000/api
+Make sure to restart your React app after editing .env.
+
+📄 src/index.js
+javascript
+Copy
+Edit
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+⚙️ src/api.js
+javascript
+Copy
+Edit
+import axios from 'axios';
+
+const API = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+});
+
+export const fetchItems = () => API.get('/items');
+🧠 src/App.js
+javascript
+Copy
+Edit
+import React, { useEffect, useState } from 'react';
+import { fetchItems } from './api';
+
+function App() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetchItems()
+      .then((response) => setItems(response.data))
+      .catch((error) => console.error('Error fetching items:', error));
+  }, []);
+
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1>📦 Item List</h1>
+      {items.length === 0 ? (
+        <p>Loading items...</p>
+      ) : (
+        <ul>
+          {items.map((item, index) => (
+            <li key={index}>{item.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export default App;
+📝 public/index.html
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Frontend App</title>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
